@@ -1,0 +1,9 @@
+# oapi-codegenで使用する設定ファイル
+
+package: api
+generate:
+  models: true
+  gin-server: true
+  client: true
+  embedded-spec: true
+output: api/api.gen.go

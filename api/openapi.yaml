@@ -1,0 +1,187 @@
+# apiの設定ファイル
+# openapi.yaml -> oapi-codegen -> Goに変換
+
+openapi: 3.0.3 # openAPIのバージョン
+info:
+  title: Go API Template # 作成するAPIのタイトル
+  version: 1.0.0 # APIのバージョン
+servers: # APIが利用可能なサーバのURL
+  - url: http://0.0.0.0:8080/api/v1
+  - url: http://localhost:8080/api/v1
+  - url: http://127.0.0.1:8080/api/v1
+paths:
+  /album:
+    post:
+      summary: Create a new album
+      operationId: createAlbum
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlbumCreateRequest' # 別定義の参照
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlbumResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /album/{id}:
+    get:
+      summary: Find album by ID
+      operationId: getAlbumId
+      parameters:
+        - name: id # パラメータ名
+          in: path # パラメータの場所定義
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlbumResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    patch:
+      summary: Update a album by ID
+      operationId: updateAlbumId
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlbumUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlbumResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Delete a album by ID
+      operationId: deleteAlbumId
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components: # 上記で使用したスキーマのリクエスト・レスポンスの定義を書いていく
+  schemas:
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          enum:
+            - food
+            - music
+            - sports
+      required:
+        - name
+    ReleaseDate:
+      type: string
+      format: date
+    Anniversary:
+      type: integer
+    AlbumResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        category:
+          $ref: '#/components/schemas/Category'
+        anniversary:
+          $ref: '#/components/schemas/Anniversary'
+        ReleaseDate:
+          $ref: '#/components/schemas/ReleaseDate'
+      required:
+        - id
+        - title
+        - category
+        - anniversary
+        - releaseDate
+    AlbumUpdateRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        category:
+          $ref: '#/components/schemas/Category'
+    AlbumCreateRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        category:
+          $ref: '#/components/schemas/Category'
+        ReleaseDate:
+          $ref: '#/components/schemas/ReleaseDate'
+      required:
+        - title
+        - category
+        - releaseDate
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
