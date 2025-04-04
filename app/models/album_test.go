@@ -83,12 +83,12 @@ func (suite *AlbumTestSuite) TestAlbumMarshal() {
 	albumJSON, err := album.MarshalJSON()
 	suite.Assert().Nil(err)
 	suite.Assert().JSONEq(fmt.Sprintf(`{
-		"anniversary" :"%d",
+		"anniversary" :%d,
 		"category":{
-			"id":0,"name":"sports",
+			"id":0,"name":"sports"
 		},
 		"id":0,
-		"releaseDate":"2023-01-01",
-		"title":"Test",
+		"ReleaseDate":"2023-01-01",
+		"title":"Test"
 	}`, anniversary), string(albumJSON))
 }
