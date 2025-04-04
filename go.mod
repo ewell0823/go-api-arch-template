@@ -1,6 +1,8 @@
 module go-api-arch-mvc-template
 
-go 1.23.4
+go 1.23.0
+
+toolchain go1.23.6
 
 require (
 	github.com/getkin/kin-openapi v0.129.0
